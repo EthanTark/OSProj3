@@ -6,7 +6,7 @@
 
 //
 //	TODO: add code to create and manage the buffer
-//
+// Can use? semaphore.h look at slides   p.thread_create
 
 //
 // Sends out HTTP response in case of errors
