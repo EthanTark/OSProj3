@@ -1,12 +1,24 @@
 #include "io_helper.h"
 #include "request.h"
-
+#include "semaphore.h"
 #define MAXBUF (8192)
 
 
 //
 //	TODO: add code to create and manage the buffer
-// Can use? semaphore.h look at slides   p.thread_create
+//  look at slides   p.thread_create
+thread_buffer(thread){
+  sem_t sem;
+  count = 0;
+  sem_init(&sem, 0, count);
+    while(count<0){
+      sem_wait(&sem);
+      //threads doing stuff
+      sem_post(&sem);
+
+  }
+}
+
 
 //
 // Sends out HTTP response in case of errors
@@ -175,6 +187,24 @@ void request_handle(int fd) {
 		}
 		
 		// TODO: write code to add HTTP requests in the buffer based on the scheduling policy
+    if(FIFO){
+      while(stuff){
+        thread_buffer()
+      }
+    }
+    if(SFF){
+      while(stuff){
+        stuff.size
+        thread_buffer()
+      }
+    }
+    if(random){
+      while(stuff){
+        stuff.random
+        thread_buffer()
+      }
+    }
+
 
     } else {
 		request_error(fd, filename, "501", "Not Implemented", "server does not serve dynamic content request");
