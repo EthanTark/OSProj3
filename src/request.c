@@ -3,17 +3,20 @@
 #include "semaphore.h"
 #define MAXBUF (8192)
 
+#define BUFFER_SIZE 10
 
 //
 //	TODO: add code to create and manage the buffer
 //  look at slides   p.thread_create
-thread_buffer(thread){
+thread_buffer(void* arg){
+  int buff[BUFFER_SIZE];
   sem_t sem;
-  count = 0;
+  int count = 0;
   sem_init(&sem, 0, count);
     while(count<0){
       sem_wait(&sem);
       //threads doing stuff
+      thread_request_serve_static(void* arg)
       sem_post(&sem);
 
   }
@@ -147,6 +150,7 @@ void request_serve_static(int fd, char *filename, int filesize) {
 void* thread_request_serve_static(void* arg)
 {
 	// TODO: write code to actualy respond to HTTP requests
+  request_handle
 }
 
 //
@@ -186,6 +190,7 @@ void request_handle(int fd) {
 			return;
 		}
 		
+    //which one when?
 		// TODO: write code to add HTTP requests in the buffer based on the scheduling policy
     if(FIFO){
       while(stuff){
@@ -194,7 +199,7 @@ void request_handle(int fd) {
     }
     if(SFF){
       while(stuff){
-        stuff.size
+        sbuf.size();         ///How get more than 1 request?
         thread_buffer()
       }
     }
