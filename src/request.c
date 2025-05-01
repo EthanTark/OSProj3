@@ -5,23 +5,40 @@
 
 #define BUFFER_SIZE 10
 
+int lock = 1;
+struct{
+  int fd;
+  char *name;
+  int size;
+}
+
+
 //
 //	TODO: add code to create and manage the buffer
 //  look at slides   p.thread_create
-thread_buffer(void* arg){
-  int buff[BUFFER_SIZE];
-  sem_t sem;
-  int count = 0;
-  sem_init(&sem, 0, count);
-    while(count<0){
-      sem_wait(&sem);
-      //threads doing stuff
-      thread_request_serve_static(void* arg)
-      sem_post(&sem);
-
+thread_buffer(int mode, int fd, char *filename, int filesize){
+  if(filesize == -1){
+    request_error(fd, filename, "101", "Sorter Error", "Incorrect Sorter Used");
+    abort();
   }
+  lock--;
+  request_serve_static(int fd, char *filename, int filesize);
+  lock++;
+  wake();
 }
 
+
+//int buff[BUFFER_SIZE];
+//sem_t sem;
+//int count = 0;
+//sem_init(&sem, 0, count);
+  //while(count<0){
+    //sem_wait(&sem);
+    //threads doing stuff
+    //request_serve_static(int fd, char *filename, int filesize)
+    //sem_post(&sem);
+
+//}
 
 //
 // Sends out HTTP response in case of errors
@@ -147,9 +164,26 @@ void request_serve_static(int fd, char *filename, int filesize) {
 //
 // Fetches the requests from the buffer and handles them (thread logic)
 //
-void* thread_request_serve_static(void* arg)
+dataType threads[10];
+void* thread_request_serve_static(int arg, int fd, char *filename)
 {
 	// TODO: write code to actualy respond to HTTP requests
+  if(0){//FIFO
+      thread_buffer(0, fd, *filename, -1)
+  }
+  if(1){ //SFF
+      long start = ftell(fd);
+      fseek(fd,0L, SEEK_END);
+      long end = ftell(fd);
+      fseek(fd, start, SEEK_SET);
+      int size = end;
+
+      thread_buffer(1, fd, *filename, filesize)
+  }
+  if(2){//random
+      stuff.random
+      thread_buffer(2, fd, *filename, -1);
+  }
   request_handle
 }
 
@@ -189,26 +223,16 @@ void request_handle(int fd) {
 			request_error(fd, filename, "403", "Forbidden", "server could not read this file");
 			return;
 		}
+
+    if (strcasecmp(method, "GET")) {
+      request_error(fd, method, "501", "Not Implemented", "server does not implement this method");
+      return;
+      }
 		
-    //which one when?
 		// TODO: write code to add HTTP requests in the buffer based on the scheduling policy
-    if(FIFO){
-      while(stuff){
-        thread_buffer()
-      }
-    }
-    if(SFF){
-      while(stuff){
-        sbuf.size();         ///How get more than 1 request?
-        thread_buffer()
-      }
-    }
-    if(random){
-      while(stuff){
-        stuff.random
-        thread_buffer()
-      }
-    }
+
+    thread_request_serve_static(0, fd, filename, );
+    
 
 
     } else {
