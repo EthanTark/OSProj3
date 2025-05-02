@@ -5,6 +5,7 @@
 #define MAXBUF (8192)
 
 #define BUFFER_SIZE 10
+int counter = 0;
 //
 //	TODO: add code to create and manage the buffer
 //  look at slides   p.thread_create
@@ -19,9 +20,48 @@ thread_buffer(int fd){
       thread_request_serve_static(void* arg)
       sem_post(&sem);
 
+
+pthread_mutex_t lock= PTHREAD_MUTEX_INITIALIZER;
+struct webRequest{
+  int fd;
+  char fname[MAXBUF];
+  int size;
+};
+
+webRequest globalBuffer[20];
+
+
+//
+//	TODO: add code to create and manage the buffer
+//  look at slides   p.thread_create
+thread_buffer(int mode, int fd, char *filename, int filesize){
+  if(filesize == -1){
+    request_error(fd, filename, "101", "Sorter Error", "Incorrect Sorter Used");
+    abort();
   }
+  //Stuff to check buffer in for loop.
+
+  pthread_mutex_lock(&lock); //Safe way to make double sure no double taking
+
+  //grab from buffer
+  //grab from buffer and store in buffRequest
+  request_serve_static(buffRequest.fd, etc);
+  //counter--;
+  pthread_mutex_unlock(&lock);
 }
 
+
+//int buff[BUFFER_SIZE];
+//sem_t sem;
+//int count = 0;
+//sem_init(&sem, 0, count);
+  //while(count<0){
+    //sem_wait(&sem);
+    //threads doing stuff
+    //request_serve_static(int fd, char *filename, int filesize)
+    //sem_post(&sem);
+
+//}
 
 //
 // Sends out HTTP response in case of errors
@@ -147,11 +187,30 @@ void request_serve_static(int fd, char *filename, int filesize) {
 //
 // Fetches the requests from the buffer and handles them (thread logic)
 //
-//void* thread_request_serve_static(void* arg)
-//{
-
+dataType threads[10];
+void* thread_request_serve_static(int arg, int fd, char *filename)
+{
 	// TODO: write code to actualy respond to HTTP requests
-//}
+  if(0){//FIFO
+      thread_buffer(0, fd, *filename, -1)
+  }
+  if(1){ //SFF
+      long start = ftell(fd);
+      //take smallest in buffer
+      long smallest = 100000;
+      
+      fseek(fd,0L, SEEK_END);
+      long end = ftell(fd);
+      fseek(fd, start, SEEK_SET);
+      int size = end;
+
+      thread_buffer(1, fd, *filename, filesize)
+  }
+  else{//random
+      stuff.random
+      thread_buffer(2, fd, *filename, -1);
+  }
+}
 
 //
 // Initial handling of the request
@@ -189,28 +248,20 @@ void request_handle(int fd) {
 			request_error(fd, filename, "403", "Forbidden", "server could not read this file");
 			return;
 		}
-		
 
+    if (strcasecmp(method, "GET")) {
+      request_error(fd, method, "501", "Not Implemented", "server does not implement this method");
+      return;
+      }
 
-    //which one when?
+      
+		// TODO: Make if for breakout attack
+    // put request in array
 		// TODO: write code to add HTTP requests in the buffer based on the scheduling policy
-    if(FIFO){
-      while(stuff){
-        request_serve_static(fd, filename, sbuf.st_size);
-      }
-    }
-    if(SFF){
-      while(filename.size()=){  //Find C lib for file size //stat, fseek
-        sbuf.size();         ///How get more than 1 request?
-        request_serve_static(fd, filename, sbuf.st_size);
-      }
-    }
-    if(random){
-      while(stuff){
-        stuff.random
-        request_serve_static(fd, filename, sbuf.st_size);
-      }
-    }
+
+    webRequest newRequest = {fd, filename, sbuf.st_size};
+    // if statement checking buffer and add global var
+    
 
 
     } else {
