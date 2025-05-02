@@ -1,14 +1,14 @@
 #include "io_helper.h"
 #include "request.h"
 #include "semaphore.h"
+#include "pthread"
 #define MAXBUF (8192)
 
 #define BUFFER_SIZE 10
-
 //
 //	TODO: add code to create and manage the buffer
 //  look at slides   p.thread_create
-thread_buffer(void* arg){
+thread_buffer(int fd){
   int buff[BUFFER_SIZE];
   sem_t sem;
   int count = 0;
@@ -147,11 +147,11 @@ void request_serve_static(int fd, char *filename, int filesize) {
 //
 // Fetches the requests from the buffer and handles them (thread logic)
 //
-void* thread_request_serve_static(void* arg)
-{
+//void* thread_request_serve_static(void* arg)
+//{
+
 	// TODO: write code to actualy respond to HTTP requests
-  request_handle
-}
+//}
 
 //
 // Initial handling of the request
@@ -190,23 +190,25 @@ void request_handle(int fd) {
 			return;
 		}
 		
+
+
     //which one when?
 		// TODO: write code to add HTTP requests in the buffer based on the scheduling policy
     if(FIFO){
       while(stuff){
-        thread_buffer()
+        request_serve_static(fd, filename, sbuf.st_size);
       }
     }
     if(SFF){
-      while(stuff){
+      while(filename.size()=){  //Find C lib for file size //stat, fseek
         sbuf.size();         ///How get more than 1 request?
-        thread_buffer()
+        request_serve_static(fd, filename, sbuf.st_size);
       }
     }
     if(random){
       while(stuff){
         stuff.random
-        thread_buffer()
+        request_serve_static(fd, filename, sbuf.st_size);
       }
     }
 
