@@ -12,6 +12,8 @@ struct{
   int size;
 }
 
+//Create Array here
+
 
 //
 //	TODO: add code to create and manage the buffer
@@ -21,6 +23,7 @@ thread_buffer(int mode, int fd, char *filename, int filesize){
     request_error(fd, filename, "101", "Sorter Error", "Incorrect Sorter Used");
     abort();
   }
+  //Stuff to check array in for loop.
   lock--;
   request_serve_static(int fd, char *filename, int filesize);
   lock++;
