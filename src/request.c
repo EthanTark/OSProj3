@@ -5,7 +5,7 @@
 
 #define BUFFER_SIZE 10
 
-int lock = 1;
+int lock = 0;
 struct{
   int fd;
   char *name;
@@ -24,10 +24,11 @@ thread_buffer(int mode, int fd, char *filename, int filesize){
     abort();
   }
   //Stuff to check array in for loop.
-  lock--;
+
+  lock++; //Safe way to make double sure no double taking
   request_serve_static(int fd, char *filename, int filesize);
-  lock++;
-  wake();
+  lock--;
+  end?
 }
 
 
