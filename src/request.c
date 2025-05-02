@@ -184,11 +184,10 @@ void* thread_request_serve_static(int arg, int fd, char *filename)
 
       thread_buffer(1, fd, *filename, filesize)
   }
-  if(2){//random
+  else{//random
       stuff.random
       thread_buffer(2, fd, *filename, -1);
   }
-  request_handle
 }
 
 //
@@ -232,7 +231,7 @@ void request_handle(int fd) {
       request_error(fd, method, "501", "Not Implemented", "server does not implement this method");
       return;
       }
-		
+		// TODO: Make if for breakout attack
 		// TODO: write code to add HTTP requests in the buffer based on the scheduling policy
 
     thread_request_serve_static(0, fd, filename, );
