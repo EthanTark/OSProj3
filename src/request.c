@@ -156,11 +156,13 @@ void* thread_request_serve_static(int arg, int fd, char *filename)
 {
     // TODO: write code to actualy respond to HTTP requests
     // Pull from global buffer of requests
+    
+    request_serve_static(int fd, char *filename, int filesize)
 }
-void* organizer(void* arg){
+void* organizer(webRequest request){
     if(scheduling_algo==0){
         while(1){
-            globalBuffer[count];
+            globalBuffer[count] = request;
             if(count>=20){
                 count == 0;
             }
@@ -169,6 +171,14 @@ void* organizer(void* arg){
         }
     }
     if(scheduling_algo==1){
+        while(1){
+            globalBuffer[count];
+            if(count>=20){
+                count == 0;
+            }
+            else
+                count++;
+        }
 
     }
     else(scheduling_algo==2){
@@ -217,6 +227,7 @@ void request_handle(int fd) {
 	// TODO: write code to add HTTP requests in the buffer
 
     webRequest newRequest = {fd, filename, sbuf.st_size};
+
     // if statement checking buffer and add global var
     
 
