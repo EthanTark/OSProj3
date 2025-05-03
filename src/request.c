@@ -1,7 +1,7 @@
 #include "io_helper.h"
 #include "request.h"
 #include "semaphore.h"
-#include "pthread"
+#include "pthread.h"
 #define MAXBUF (8192)
 
 dataType threads[10];
@@ -153,7 +153,7 @@ void request_serve_static(int fd, char *filename, int filesize) {
 //
 // Fetches the requests from the buffer and handles them (thread logic)
 //
-dataType threads[10];
+//dataType threads[10];
 void* thread_request_serve_static(int arg, int fd, char *filename)
 {
     
@@ -161,7 +161,7 @@ void* thread_request_serve_static(int arg, int fd, char *filename)
     // Pull from global buffer of requests
     while(counter<=20){
         int curr = grabber();
-        webRequest current = globalBuffer[curr];
+        struct webRequest current = globalBuffer[curr];
         pthread_mutex_lock(&lock); //Safe way to make double sure no double taking
         buffRequest.fd = current;
         request_serve_static(buffRequest.fd, buffRequest.*filename, buffRequest.filesize);
@@ -234,8 +234,8 @@ void request_handle(int fd) {
     
 	// TODO: directory traversal mitigation	
 	// TODO: write code to add HTTP requests in the buffer
-    webRequest newRequest = {fd, filename, sbuf.st_size};
-    while(count<20){
+    webRequest newRequest = {sbuf.fd, sbuf.filename, sbuf.st_size};
+    while(counter<20){
         globalBuffer[counter] = newRequest;
         if(counter>=20){
             counter == 0;
