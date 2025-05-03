@@ -10,6 +10,7 @@ webRequest globalBuffer[20];
 int counter = 0;//Counter for organizer
 int mode = 0; // What Mode
 int tCount = 0; //counter for thread taker
+int small = 10000; //Keeping track of smallest file
 
 pthread_mutex_t lock= PTHREAD_MUTEX_INITIALIZER;
 struct webRequest{
@@ -155,6 +156,7 @@ void request_serve_static(int fd, char *filename, int filesize) {
 dataType threads[10];
 void* thread_request_serve_static(int arg, int fd, char *filename)
 {
+    
     // TODO: write code to actualy respond to HTTP requests
     // Pull from global buffer of requests
     while(count<=20){
@@ -162,39 +164,35 @@ void* thread_request_serve_static(int arg, int fd, char *filename)
          pthread_mutex_lock(&lock); //Safe way to make double sure no double taking
           buffRequest.fd = current;
          request_serve_static(buffRequest.fd, buffRequest.*filename, buffRequest.filesize);
+         if(tcount>=10){
+            tcount == -1;
+         }
          tCount++;
          pthread_mutex_unlock(&lock);
        }
 
     request_serve_static(int fd, char *filename, int filesize)
 }
-void* organizer(webRequest request){
-    if(scheduling_algo==0){
-        while(1){
-            globalBuffer[count] = request;
-            if(count>=20){
-                count == 0;
-            }
-            else
-                count++;
-        }
-    }
-    if(scheduling_algo==1){
-        while(1){
-            globalBuffer[count];
-            if(count>=20){
-                count == 0;
-            }
-            else
-                count++;
-        }
 
+int grabber(){
+    if(scheduling_algo==0){ //FIFO
+      return count;
     }
-    else(scheduling_algo==2){
+    if(scheduling_algo==1){ //SFF
+        while(1){
+           int smallest = 0;
+           int curr = 0
+           while(curr<20){
+            if(globalBuffer[curr].size<globalBuffer[smallest].size)
+            curr++;
+           }
+        }
+    }
+    else(scheduling_algo==2){ //Random
         
     }
+    return 
 }
-
 //
 // Initial handling of the request
 //
@@ -234,8 +232,15 @@ void request_handle(int fd) {
     
 	// TODO: directory traversal mitigation	
 	// TODO: write code to add HTTP requests in the buffer
-
     webRequest newRequest = {fd, filename, sbuf.st_size};
+    while(count<20){
+        globalBuffer[count] = newRequest;
+        if(count>=20){
+            count == 0;
+        }
+        else
+            count++;
+    }
 
     // if statement checking buffer and add global var
     
