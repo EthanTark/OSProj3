@@ -1,7 +1,21 @@
 #include "io_helper.h"
 #include "request.h"
-
+#include "semaphore.h"
+#include "pthread"
 #define MAXBUF (8192)
+
+dataType threads[10];
+webRequest globalBuffer[20];
+
+int counter = 0;
+int mode = 0;
+
+pthread_mutex_t lock= PTHREAD_MUTEX_INITIALIZER;
+struct webRequest{
+  int fd;
+  char fname[MAXBUF];
+  int size;
+};
 
 // below default values are defined in 'request.h'
 int num_threads = DEFAULT_THREADS;
@@ -141,6 +155,19 @@ void* thread_request_serve_static(void* arg)
 {
     // TODO: write code to actualy respond to HTTP requests
     // Pull from global buffer of requests
+}
+void* organizer(void* arg){
+    if(scheduling_algo==0){
+        while(1){
+            globalBuffer[count];
+        }
+    }
+    if(scheduling_algo==1){
+
+    }
+    else(scheduling_algo==2){
+        
+    }
 }
 
 //
