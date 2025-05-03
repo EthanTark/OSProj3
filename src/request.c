@@ -7,8 +7,9 @@
 dataType threads[10];
 webRequest globalBuffer[20];
 
-int counter = 0;
-int mode = 0;
+int counter = 0;//Counter for organizer
+int mode = 0; // What Mode
+int tCount = 0; //counter for thread taker
 
 pthread_mutex_t lock= PTHREAD_MUTEX_INITIALIZER;
 struct webRequest{
@@ -156,7 +157,15 @@ void* thread_request_serve_static(int arg, int fd, char *filename)
 {
     // TODO: write code to actualy respond to HTTP requests
     // Pull from global buffer of requests
-    
+    while(count<=20){
+         webRequest current = globalBuffer[tCount];
+         pthread_mutex_lock(&lock); //Safe way to make double sure no double taking
+          buffRequest.fd = current;
+         request_serve_static(buffRequest.fd, buffRequest.*filename, buffRequest.filesize);
+         tCount++;
+         pthread_mutex_unlock(&lock);
+       }
+
     request_serve_static(int fd, char *filename, int filesize)
 }
 void* organizer(webRequest request){
