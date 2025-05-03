@@ -151,7 +151,8 @@ void request_serve_static(int fd, char *filename, int filesize) {
 //
 // Fetches the requests from the buffer and handles them (thread logic)
 //
-void* thread_request_serve_static(void* arg)
+dataType threads[10];
+void* thread_request_serve_static(int arg, int fd, char *filename)
 {
     // TODO: write code to actualy respond to HTTP requests
     // Pull from global buffer of requests
@@ -209,6 +210,11 @@ void request_handle(int fd) {
     
 	// TODO: directory traversal mitigation	
 	// TODO: write code to add HTTP requests in the buffer
+
+    webRequest newRequest = {fd, filename, sbuf.st_size};
+    // if statement checking buffer and add global var
+    
+
 
     } else {
 	request_error(fd, filename, "501", "Not Implemented", "server does not serve dynamic content request");
