@@ -161,6 +161,11 @@ void* organizer(void* arg){
     if(scheduling_algo==0){
         while(1){
             globalBuffer[count];
+            if(count>=20){
+                count == 0;
+            }
+            else
+                count++;
         }
     }
     if(scheduling_algo==1){
