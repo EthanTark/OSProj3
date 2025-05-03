@@ -176,22 +176,24 @@ void* thread_request_serve_static(int arg, int fd, char *filename)
 
 int grabber(){
     if(scheduling_algo==0){ //FIFO
-      return count;
+      return counter;
     }
     if(scheduling_algo==1){ //SFF
-        while(1){
-           int smallest = 0;
-           int curr = 0
-           while(curr<20){
+    
+        int smallest = 0;
+        int curr = 0
+        while(curr<20){
             if(globalBuffer[curr].size<globalBuffer[smallest].size)
+                smallest = curr;
+
             curr++;
-           }
         }
+        return smallest;
     }
     else(scheduling_algo==2){ //Random
-        
+        return rand() % 20;  
     }
-    return 
+    return 0;
 }
 //
 // Initial handling of the request
@@ -234,12 +236,12 @@ void request_handle(int fd) {
 	// TODO: write code to add HTTP requests in the buffer
     webRequest newRequest = {fd, filename, sbuf.st_size};
     while(count<20){
-        globalBuffer[count] = newRequest;
-        if(count>=20){
-            count == 0;
+        globalBuffer[counter] = newRequest;
+        if(counter>=20){
+            counter == 0;
         }
         else
-            count++;
+            counter++;
     }
 
     // if statement checking buffer and add global var
