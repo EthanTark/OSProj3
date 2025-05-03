@@ -159,19 +159,19 @@ void* thread_request_serve_static(int arg, int fd, char *filename)
     
     // TODO: write code to actualy respond to HTTP requests
     // Pull from global buffer of requests
-    while(count<=20){
-         webRequest current = globalBuffer[tCount];
-         pthread_mutex_lock(&lock); //Safe way to make double sure no double taking
-          buffRequest.fd = current;
-         request_serve_static(buffRequest.fd, buffRequest.*filename, buffRequest.filesize);
-         if(tcount>=10){
+    while(counter<=20){
+        int curr = grabber();
+        webRequest current = globalBuffer[curr];
+        pthread_mutex_lock(&lock); //Safe way to make double sure no double taking
+        buffRequest.fd = current;
+        request_serve_static(buffRequest.fd, buffRequest.*filename, buffRequest.filesize);
+        if(tcount>=10){
             tcount == -1;
-         }
-         tCount++;
-         pthread_mutex_unlock(&lock);
-       }
-
-    request_serve_static(int fd, char *filename, int filesize)
+        }
+        tCount++;
+        pthread_mutex_unlock(&lock);
+    }
+    return;
 }
 
 int grabber(){
@@ -239,6 +239,7 @@ void request_handle(int fd) {
         globalBuffer[counter] = newRequest;
         if(counter>=20){
             counter == 0;
+            break;
         }
         else
             counter++;
