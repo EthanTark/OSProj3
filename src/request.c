@@ -18,7 +18,7 @@ typedef struct {
   int size;
  } webRequest;
 
-struct webRequest globalBuffer[20];
+webRequest globalBuffer[20];
 // below default values are defined in 'request.h'
 int num_threads = DEFAULT_THREADS;
 int buffer_max_size = DEFAULT_BUFFER_SIZE;
@@ -181,7 +181,7 @@ void* thread_request_serve_static(void* arg)
     // Pull from global buffer of requests
     while(counter<=20){
         int curr = grabber();
-        struct webRequest current = globalBuffer[curr];
+        webRequest current = globalBuffer[curr];
         pthread_mutex_lock(&lock); //Safe way to make double sure no double taking
         
         request_serve_static(current.fd, current.fname, current.size);
