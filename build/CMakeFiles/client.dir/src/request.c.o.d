@@ -1,4 +1,4 @@
-CMakeFiles/server.dir/src/request.c.o: \
+CMakeFiles/client.dir/src/request.c.o: \
  /mnt/c/Users/Ethan/OneDrive/Documents/Programming/twin_Proj3/OSProj3/src/request.c \
  /usr/include/stdc-predef.h \
  /mnt/c/Users/Ethan/OneDrive/Documents/Programming/twin_Proj3/OSProj3/src/io_helper.h \

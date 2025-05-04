@@ -1,7 +1,7 @@
 CMakeFiles/server.dir/src/io_helper.c.o: \
- /mnt/c/Users/Ethan/Documents/Programming/OSsys/OSProj3/src/io_helper.c \
+ /mnt/c/Users/Ethan/OneDrive/Documents/Programming/twin_Proj3/OSProj3/src/io_helper.c \
  /usr/include/stdc-predef.h \
- /mnt/c/Users/Ethan/Documents/Programming/OSsys/OSProj3/src/io_helper.h \
+ /mnt/c/Users/Ethan/OneDrive/Documents/Programming/twin_Proj3/OSProj3/src/io_helper.h \
  /usr/include/arpa/inet.h /usr/include/features.h \
  /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \

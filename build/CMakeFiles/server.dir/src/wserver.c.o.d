@@ -1,5 +1,5 @@
 CMakeFiles/server.dir/src/wserver.c.o: \
- /mnt/c/Users/Ethan/Documents/Programming/OSsys/OSProj3/src/wserver.c \
+ /mnt/c/Users/Ethan/OneDrive/Documents/Programming/twin_Proj3/OSProj3/src/wserver.c \
  /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -27,8 +27,8 @@ CMakeFiles/server.dir/src/wserver.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdio2-decl.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /mnt/c/Users/Ethan/Documents/Programming/OSsys/OSProj3/src/request.h \
- /mnt/c/Users/Ethan/Documents/Programming/OSsys/OSProj3/src/io_helper.h \
+ /mnt/c/Users/Ethan/OneDrive/Documents/Programming/twin_Proj3/OSProj3/src/request.h \
+ /mnt/c/Users/Ethan/OneDrive/Documents/Programming/twin_Proj3/OSProj3/src/io_helper.h \
  /usr/include/arpa/inet.h /usr/include/netinet/in.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/sys/socket.h \
