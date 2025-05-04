@@ -164,13 +164,14 @@ int grabber(){
             if(globalBuffer[i].counter>=20){
                 return i;
             }
-            if (globalBuffer[i].size < smallest)
+            if (globalBuffer[i].size < smallest){
                 smallest = globalBuffer[i].size;
                 index = i;
             }   
-        return index;
-    }
+            return index;
+        }
     return (rand() % curr_buff_size); //Random
+    }
 }
 
 //
@@ -231,6 +232,11 @@ void request_handle(int fd) {
 		request_error(fd, filename, "403", "Forbidden", "server could not read this file");
 		return;
 	}
+
+    if(strstr(filename, "..")){
+        request_error(fd, filename, "101", "Forbidden", "Unauthorized access, server could not read this file");
+		return;
+    }
     
 	// TODO: directory traversal mitigation	
 	// TODO: write code to add HTTP requests in the buffer
