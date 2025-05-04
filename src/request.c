@@ -7,27 +7,28 @@
 pthread_t threads[10];
 
 int counter = 0;//Counter for organizer
-int mode = 0; // What Mode
 int tCount = 0; //counter for thread taker
 int small = 10000; //Keeping track of smallest file
 int curr_buff_size = 0;//Keeping track of things in buffer
 
 pthread_mutex_t lock= PTHREAD_MUTEX_INITIALIZER;
-typedef struct {
-  int fd;
-  char fname[MAXBUF];
-  int size;
-  int counter;
+typedef struct { //Struct to hold data for HTTP request
+  int fd; //File Data
+  char fname[MAXBUF]; // File Name
+  int size; // Size of File
+  int counter; // Counter for SFF
  } webRequest;
 
-webRequest globalBuffer[20];
+webRequest globalBuffer[20]; // Buffer to hold request in
+
+//Remember the buffer takes things from back and they will move to front
 // below default values are defined in 'request.h'
-int num_threads = DEFAULT_THREADS;
-int buffer_max_size = DEFAULT_BUFFER_SIZE;
-int scheduling_algo = DEFAULT_SCHED_ALGO;	
+int num_threads = DEFAULT_THREADS; //Num of Threads
+int buffer_max_size = DEFAULT_BUFFER_SIZE; //Buffer Max Size
+int scheduling_algo = DEFAULT_SCHED_ALGO; // What Algorithm will be run
 
 //
-//	TODO: add code to create and manage the shared global buffer of requests
+//	---TODO: add code to create and manage the shared global buffer of requests
 //	HINT: You will need synchronization primitives.
 //		pthread_mutuex_t lock_var is a viable option.
 //
@@ -152,23 +153,23 @@ void request_serve_static(int fd, char *filename, int filesize) {
     munmap_or_die(srcp, filesize);
 }
 
-int grabber(){
+int grabber(){ //Special function for grabbing the correct request
     if(scheduling_algo==0){ //FIFO
-            return 0;
+            return 0; //what ever is first in Buffer should be right
   }
     if(scheduling_algo==1){ //SFF
-        int index = 0;
-        int smallest = small;
-        for (int i=0; i < curr_buff_size; i++){   
-            globalBuffer[i].counter++;
-            if(globalBuffer[i].counter>=20){
-                return i;
+        int index = 0; //Where to start in buffer
+        int smallest = small; //Getting default smallest value of 100000
+        for (int i=0; i < curr_buff_size; i++){    // Iterate through buffer
+            globalBuffer[i].counter++; //counter for how long request been in buffer
+            if(globalBuffer[i].counter>=20){ // checking that request isn't starved
+                return i; //return it if starving
             }
-            if (globalBuffer[i].size < smallest){
-                smallest = globalBuffer[i].size;
-                index = i;
+            if (globalBuffer[i].size < smallest){ // checking for smallest request
+                smallest = globalBuffer[i].size; //updating smallest
+                index = i; //updating place of smallest
             }   
-            return index;
+            return index; //return the place of smallest
         }
     return (rand() % curr_buff_size); //Random
     }
@@ -183,14 +184,14 @@ void* thread_request_serve_static(void* arg)
     
     // TODO: write code to actualy respond to HTTP requests
     // Pull from global buffer of requests
-    while(counter<=20){
-        int curr = grabber();
-        webRequest threadRequest = globalBuffer[curr];
+    while(counter<=20){ //checking on buffer requests
+        int curr = grabber(); //grab place of request based on algo
+        webRequest threadRequest = globalBuffer[curr]; //putting in another place
         pthread_mutex_lock(&lock); //Safe way to make double sure no double taking
         
-        request_serve_static(threadRequest.fd, threadRequest.fname, threadRequest.size);
-        curr_buff_size--;
-        pthread_mutex_unlock(&lock);
+        request_serve_static(threadRequest.fd, threadRequest.fname, threadRequest.size); //Use thread to do request
+        curr_buff_size--; //minus from buffer size
+        pthread_mutex_unlock(&lock); //let other thread take request
     }
     return NULL;
 }
@@ -233,17 +234,17 @@ void request_handle(int fd) {
 		return;
 	}
 
-    if(strstr(filename, "..")){
+    if(strstr(filename, "..")){ //prevention for traversal attack
         request_error(fd, filename, "101", "Forbidden", "Unauthorized access, server could not read this file");
 		return;
     }
     
 	// TODO: directory traversal mitigation	
 	// TODO: write code to add HTTP requests in the buffer
-    webRequest newRequest = {fd, filename, sbuf.st_size, 0};
-    if(curr_buff_size<20){
-        globalBuffer[curr_buff_size] = newRequest;
-        curr_buff_size++;
+    webRequest newRequest = {fd, filename, sbuf.st_size, 0}; //getting needed info for struct
+    if(curr_buff_size<20){ //checking for buffer size
+        globalBuffer[curr_buff_size] = newRequest; // making buffer for request
+        curr_buff_size++; //increasing size for what in buffer
     }
 
     // if statement checking buffer and add global var
