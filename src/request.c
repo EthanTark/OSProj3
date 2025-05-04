@@ -153,18 +153,15 @@ void request_serve_static(int fd, char *filename, int filesize) {
 
 int grabber(){
     if(scheduling_algo==0){ //FIFO
-        if(globalBuffer[curr_buff_size]!=NULL)
             return 0;
-        else
-            return NULL;
   }
     if(scheduling_algo==1){ //SFF
   
         int smallest = small;
         for (int i=0; i < curr_buff_size; i++){   
             if (globalBuffer[curr_buff_size].size < smallest)
-                smallest = globalBuffer[curr_buff_size].size
-                index = i;
+                smallest = globalBuffer[curr_buff_size].size;
+                int index = i;
             }   
         return index;
     }
@@ -182,10 +179,10 @@ void* thread_request_serve_static(void* arg)
     // Pull from global buffer of requests
     while(counter<=20){
         int curr = grabber();
-        threadRequest = globalBuffer[curr];
+        webRequest threadRequest = globalBuffer[curr];
         pthread_mutex_lock(&lock); //Safe way to make double sure no double taking
         
-        request_serve_static(current.fd, current.fname, current.size);
+        request_serve_static(threadRequest.fd, threadRequest.fname, threadRequest.size);
         curr_buff_size--;
         pthread_mutex_unlock(&lock);
     }
