@@ -12,11 +12,11 @@ int tCount = 0; //counter for thread taker
 int small = 10000; //Keeping track of smallest file
 
 pthread_mutex_t lock= PTHREAD_MUTEX_INITIALIZER;
-struct webRequest{
+typedef struct {
   int fd;
   char fname[MAXBUF];
   int size;
-};
+ } webRequest;
 
 struct webRequest globalBuffer[20];
 // below default values are defined in 'request.h'
@@ -234,7 +234,7 @@ void request_handle(int fd) {
     
 	// TODO: directory traversal mitigation	
 	// TODO: write code to add HTTP requests in the buffer
-    struct webRequest newRequest = {sbuf.fd, sbuf.filename, sbuf.st_size};
+    webRequest newRequest = {sbuf.fd, sbuf.filename, sbuf.st_size};
     while(counter<20){
         globalBuffer[counter] = newRequest;
         if(counter>=20){
