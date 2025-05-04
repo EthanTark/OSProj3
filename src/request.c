@@ -234,7 +234,7 @@ void request_handle(int fd) {
     
 	// TODO: directory traversal mitigation	
 	// TODO: write code to add HTTP requests in the buffer
-    webRequest newRequest = {sbuf.fd, sbuf.filename, sbuf.st_size};
+    webRequest newRequest = {fd, filename, sbuf.st_size};
     while(counter<20){
         globalBuffer[counter] = newRequest;
         if(counter>=20){
