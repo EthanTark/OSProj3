@@ -17,6 +17,7 @@ typedef struct {
   int fd;
   char fname[MAXBUF];
   int size;
+  int counter;
  } webRequest;
 
 webRequest globalBuffer[20];
@@ -159,8 +160,12 @@ int grabber(){
         int index = 0;
         int smallest = small;
         for (int i=0; i < curr_buff_size; i++){   
-            if (globalBuffer[curr_buff_size].size < smallest)
-                smallest = globalBuffer[curr_buff_size].size;
+            globalBuffer[i].counter++;
+            if(globalBuffer[i].counter>=20){
+                return i;
+            }
+            if (globalBuffer[i].size < smallest)
+                smallest = globalBuffer[i].size;
                 index = i;
             }   
         return index;
@@ -229,7 +234,7 @@ void request_handle(int fd) {
     
 	// TODO: directory traversal mitigation	
 	// TODO: write code to add HTTP requests in the buffer
-    webRequest newRequest = {fd, filename, sbuf.st_size};
+    webRequest newRequest = {fd, filename, sbuf.st_size, 0};
     if(curr_buff_size<20){
         globalBuffer[curr_buff_size] = newRequest;
         curr_buff_size++;
