@@ -156,12 +156,12 @@ int grabber(){
             return 0;
   }
     if(scheduling_algo==1){ //SFF
-  
+        int index = 0;
         int smallest = small;
         for (int i=0; i < curr_buff_size; i++){   
             if (globalBuffer[curr_buff_size].size < smallest)
                 smallest = globalBuffer[curr_buff_size].size;
-                int index = i;
+                index = i;
             }   
         return index;
     }
