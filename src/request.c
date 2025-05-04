@@ -10,6 +10,7 @@ int counter = 0;//Counter for organizer
 int mode = 0; // What Mode
 int tCount = 0; //counter for thread taker
 int small = 10000; //Keeping track of smallest file
+int curr_buff_size = 0;//Keeping track of things in buffer
 
 pthread_mutex_t lock= PTHREAD_MUTEX_INITIALIZER;
 typedef struct {
@@ -151,23 +152,23 @@ void request_serve_static(int fd, char *filename, int filesize) {
 }
 
 int grabber(){
-  if(scheduling_algo==0){ //FIFO
-    return counter;
+    if(scheduling_algo==0){ //FIFO
+        if(globalBuffer[curr_buff_size]!=NULL)
+            return 0;
+        else
+            return NULL;
   }
-  if(scheduling_algo==1){ //SFF
+    if(scheduling_algo==1){ //SFF
   
-      int smallest = 0;
-      int curr = counter;
-      while(curr<20){
-          if(globalBuffer[curr].size<globalBuffer[smallest].size)
-              smallest = curr;
-
-          curr++;
-      }
-      return smallest;
-  }
-  return rand() % 20; //Random
-  
+        int smallest = small;
+        for (int i=0; i < curr_buff_size; i++){   
+            if (globalBuffer[curr_buff_size].size < smallest)
+                smallest = globalBuffer[curr_buff_size].size
+                index = i;
+            }   
+        return index;
+    }
+    return (rand() % curr_buff_size); //Random
 }
 
 //
@@ -181,14 +182,11 @@ void* thread_request_serve_static(void* arg)
     // Pull from global buffer of requests
     while(counter<=20){
         int curr = grabber();
-        webRequest current = globalBuffer[curr];
+        threadRequest = globalBuffer[curr];
         pthread_mutex_lock(&lock); //Safe way to make double sure no double taking
         
         request_serve_static(current.fd, current.fname, current.size);
-        if(tCount>=10){
-            tCount == -1;
-        }
-        tCount++;
+        curr_buff_size--;
         pthread_mutex_unlock(&lock);
     }
     return NULL;
@@ -235,14 +233,9 @@ void request_handle(int fd) {
 	// TODO: directory traversal mitigation	
 	// TODO: write code to add HTTP requests in the buffer
     webRequest newRequest = {fd, filename, sbuf.st_size};
-    while(counter<20){
-        globalBuffer[counter] = newRequest;
-        if(counter>=20){
-            counter == 0;
-            break;
-        }
-        else
-            counter++;
+    if(curr_buff_size<20){
+        globalBuffer[curr_buff_size] = newRequest;
+        curr_buff_size++;
     }
 
     // if statement checking buffer and add global var
